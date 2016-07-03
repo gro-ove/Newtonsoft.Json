@@ -1829,7 +1829,8 @@ namespace Newtonsoft.Json
             JsonToken numberType;
 
             bool singleDigit = (char.IsDigit(firstChar) && _stringReference.Length == 1);
-            bool nonBase10 = (firstChar == '0' && _stringReference.Length > 1 && _stringReference.Chars[_stringReference.StartIndex + 1] != '.' && _stringReference.Chars[_stringReference.StartIndex + 1] != 'e' && _stringReference.Chars[_stringReference.StartIndex + 1] != 'E');
+            bool nonBase10 = (firstChar == '0' && _stringReference.Length > 1 &&
+                    (_stringReference.Chars[_stringReference.StartIndex + 1] == 'x' || _stringReference.Chars[_stringReference.StartIndex + 1] == 'X'));
 
             if (readType == ReadType.ReadAsString)
             {
@@ -1840,14 +1841,7 @@ namespace Newtonsoft.Json
                 {
                     try
                     {
-                        if (number.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-                        {
-                            Convert.ToInt64(number, 16);
-                        }
-                        else
-                        {
-                            Convert.ToInt64(number, 8);
-                        }
+                        Convert.ToInt64(number, 16);
                     }
                     catch (Exception ex)
                     {
@@ -1879,7 +1873,7 @@ namespace Newtonsoft.Json
 
                     try
                     {
-                        int integer = number.StartsWith("0x", StringComparison.OrdinalIgnoreCase) ? Convert.ToInt32(number, 16) : Convert.ToInt32(number, 8);
+                        int integer = Convert.ToInt32(number, 16);
 
                         numberValue = integer;
                     }
@@ -1922,7 +1916,7 @@ namespace Newtonsoft.Json
                     try
                     {
                         // decimal.Parse doesn't support parsing hexadecimal values
-                        long integer = number.StartsWith("0x", StringComparison.OrdinalIgnoreCase) ? Convert.ToInt64(number, 16) : Convert.ToInt64(number, 8);
+                        long integer = Convert.ToInt64(number, 16);
 
                         numberValue = Convert.ToDecimal(integer);
                     }
@@ -1962,7 +1956,7 @@ namespace Newtonsoft.Json
                     try
                     {
                         // double.Parse doesn't support parsing hexadecimal values
-                        long integer = number.StartsWith("0x", StringComparison.OrdinalIgnoreCase) ? Convert.ToInt64(number, 16) : Convert.ToInt64(number, 8);
+                        long integer = Convert.ToInt64(number, 16);
 
                         numberValue = Convert.ToDouble(integer);
                     }
@@ -2002,7 +1996,7 @@ namespace Newtonsoft.Json
 
                     try
                     {
-                        numberValue = number.StartsWith("0x", StringComparison.OrdinalIgnoreCase) ? Convert.ToInt64(number, 16) : Convert.ToInt64(number, 8);
+                        numberValue = Convert.ToInt64(number, 16);
                     }
                     catch (Exception ex)
                     {
